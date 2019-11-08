@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -7,6 +8,7 @@ namespace TechJobsConsole
 {
     class JobData
     {
+        
         static List<Dictionary<string, string>> AllJobs = new List<Dictionary<string, string>>();
         static bool IsDataLoaded = false;
 
@@ -49,7 +51,16 @@ namespace TechJobsConsole
             {
                 string aValue = row[column];
 
+                //in theory this could work...
+                string fieldLow = aValue.ToLower();
+                string vLow = value.ToLower();
+                //string coLow = column.ToLower();
+
                 if (aValue.Contains(value))
+                {
+                    jobs.Add(row);
+                }
+                else if (fieldLow.Contains(vLow))
                 {
                     jobs.Add(row);
                 }
@@ -138,5 +149,27 @@ namespace TechJobsConsole
 
             return rowValues.ToArray();
         }
+        public static List<Dictionary<string, string>> FindByValue(string value)
+        {
+            LoadData();
+            List<Dictionary<string, string>> DList = new List<Dictionary<string, string>>();
+            foreach (Dictionary<string,string> job in AllJobs)
+            {
+                foreach (string V in job.Values)
+                {
+                    string LowV = V.ToLower();
+                    string LowVal = value.ToLower();
+                    if (LowV.Contains(LowVal))
+                    {
+                        DList.Add(job);
+                        break;
+                    }
+                }
+                
+            }
+            return DList;
+        }
+
     }
+
 }
